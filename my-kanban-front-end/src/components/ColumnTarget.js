@@ -11,7 +11,7 @@ export default function ColumnTarget(props){
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
-    })
+    }) 
   })
 
   return (
@@ -20,7 +20,7 @@ export default function ColumnTarget(props){
         style={{ backgroundColor: isOver ? 'red' : 'white' }}
         status={props.status}
     >
-    </Div>
+    </Div> 
   )
 }
 

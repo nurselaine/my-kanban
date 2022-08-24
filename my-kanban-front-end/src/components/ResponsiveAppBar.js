@@ -9,7 +9,7 @@ import LandingPage from './LandingPage';
 
 
 function ResponsiveAppBar() {
-  return (
+  return ( 
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>

@@ -64,7 +64,7 @@ export default function Column() {
                   })
                 }
               </DroppableDiv>
-            </Div>
+            </Div> 
           )
         })
         }

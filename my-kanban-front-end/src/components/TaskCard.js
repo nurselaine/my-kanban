@@ -14,7 +14,7 @@ export default function TaskCard(props) {
       type: ItemTypes.CARD},
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging()
-    }),
+    }), 
   })
 
   const cardStyles =
