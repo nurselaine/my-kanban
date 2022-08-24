@@ -1,0 +1,11 @@
+{
+  "name": "my-kanban-back-end",
+  "version": "1.0.0",
+  "description": "Backend for my kanban webapp",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Elaine Huynh",
+  "license": "ISC"
+}
