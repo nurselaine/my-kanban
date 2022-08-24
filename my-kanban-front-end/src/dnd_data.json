@@ -1,0 +1,42 @@
+{
+  "columns": [
+    {"name": "BACKLOG", "id": 0},
+    {"name": "TODO", "id": 1}, 
+    {"name": "IN PROGRESS", "id": 2}, 
+    {"name": "DONE", "id": 3}
+  ],
+  "tasks": [
+    {
+      "columnid": 1,
+      "flare": "development",
+      "title": "task1",
+      "description": "task1",
+      "taskid": 1,
+      "status": "todo"
+    },
+    {   
+      "columnid": 1,
+      "flare": "development",
+      "title": "task2",
+      "description": "task2",
+      "taskid": 2,
+      "status": "todo"
+    },
+    {
+      "columnid": 1,
+      "flare": "development",
+      "title": "task3",
+      "description": "task3",
+      "taskid": 3,
+      "status": "todo"
+    },
+    {
+      "columnid": 1,
+      "flare": "design",
+      "title": "task4",
+      "description": "task4",
+      "taskid": 4,
+      "status": "todo"
+    }
+  ]
+}
