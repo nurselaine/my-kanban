@@ -18,5 +18,5 @@ A planning tool app that allows users to use lists to keep track of work. Using 
 
 #### Resources & Tools
 - [Figma Planning](https://www.figma.com/file/u8LrkBSSwuCkDmFd4rt5TV/My-Brain?node-id=0%3A1)
-- [react-beautiful-dnd](https://www.npmjs.com/package/react-beautiful-dnd)
+- [react-dnd](https://react-dnd.github.io/react-dnd/docs/overview)
 

@@ -5,7 +5,7 @@ import Data from '../dnd_data.json';
 export default function Task() {
 
     const [tasks, setTasks] = useState(Data.tasks);
-  
+
     const markAsDone = id => {
       const task = tasks.filter(task => task.taskid === id);
       task[0].status = "done";
@@ -20,7 +20,7 @@ export default function Task() {
         <TaskCard
           flare={task.flare}
           title={task.title}
-          description={task.description}
+          description={task.details}
           _id={task.taskid}
           status={task.status}
         />

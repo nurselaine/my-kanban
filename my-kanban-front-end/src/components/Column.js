@@ -1,47 +1,133 @@
-import { useState, React } from "react";
+import { useState, React, useEffect } from "react";
 import Data from '../dnd_data.json';
 import TaskCard from "./TaskCard";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
 import { ItemTypes } from "../utils/items";
 import styled from 'styled-components';
 import ColumnTarget from "./ColumnTarget";
+import ColumnHeader from './ColumnHeader';
+import { Button } from "bootstrap";
 
 export default function Column() {
 
-  const [tasks, setTasks] = useState(Data.tasks);
-  // const [updateStatus, setUpdateStatus] = useState(Data.columns[0]);
-  const [refStatus, setRefStatus] = useState('');
+  const [tasks, setTasks] = useState([]);
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [columns, setColumns] = useState([]);
+  const [columnName, setColumnName] = useState('');
+  const [columnIndex, setColumnIndex] = useState(-1);
 
-  const markStatus = (id, status, updateStatus) => {
-    const task = tasks.filter(task => task.taskid === id);
-    task[0].status = updateStatus;
-    // console.log('heelo');
-    setTasks(tasks.filter((task) => task.taskid !== id).concat(task[0]));
-    console.log(tasks);
+  useEffect(() => {
+    getColumns();
+    getTasks();
+  }, []);
+
+  const getColumns = () => {
+    fetch(`http://localhost:3001/column`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(data =>{
+        const sortedData = data.sort((a,b) => a.index - b.index)
+        setColumns(sortedData)
+      })
+      .catch(error => console.error('Error', error));
+  }
+
+  const getTasks = () => {
+    fetch('http://localhost:3001/task')
+        .then(res => res.json())
+        .then(data => {
+          // console.log(data);
+          setTasks(data);
+        })
+        .catch(error => {
+          console.error("Error", error)
+        })
+  }
+
+  const addColumn = () => {
+    fetch(`http://localhost:3001/column/add`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: ({
+        name: columnName,
+        index: columnIndex,
+        boardId: -1
+      })
+    })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error', error));
+  }
+
+  const addTask = () => {
+    fetch(`http://localhost:3001/task/add`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        boardId: 123,
+        title: "test data 2",
+        details: "test details 2",
+        status: "backlog",
+        imageUrl: "",
+        tasklist: "test data 2"
+      }), 
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error", error);
+      })
+  }
+
+  const markStatus = (id, status) => {
+    const task = tasks.filter(task => task._id === id);
+    // task[0].status = updateStatus;
+    task[0].status = status;
+    setTasks(tasks.filter((task) => task._id !== id).concat(task[0]));
+    // console.log(tasks);
   };
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: ItemTypes.CARD,
-    drop: (item, monitor) => markStatus(item.id, item.status),
+    drop: (item, monitor) => {
+      console.log(monitor.getDropResult());
+      markStatus(item.id, item.status);
+    },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
     })
+ 
   })
 
 
-  // console.log(tasks);
+  console.log(tasks);
+  // console.log(columns);
   return (
     <Main className="columns-container" style={{ padding: "1rem 0" }}>
       {/* Refactor code */}
       <>
         {
-        Data.columns.map((column, i) => {
+        columns.map((column, i) => {
           return (
             <Div key={i}>
-              <h2>{column.name.toUpperCase()}</h2>
-              {canDrop ? 'release to drop' : 'Drag box here'}
-              {console.log('hello1')}
+              <ColumnHeader
+                column={column}
+                index={i}
+                _id={column._id}
+                length={Data.columns.length}
+              />
+              {/* {canDrop ? 'release to drop' : 'Drag box here'} */}
               <ColumnTarget
                 markStatus={markStatus}
                 status={column.name.toLowerCase()}
@@ -50,128 +136,27 @@ export default function Column() {
                 {tasks
                   .filter(task => task.status === column.name.toLowerCase())
                   .map((task, i) => {
-                    console.log('hello2', task);
+                    // console.log('hello2', task);
                     return (
                       <TaskCard
-                        flare={task.flare}
                         title={task.title}
-                        description={task.description}
-                        _id={task.taskid}
+                        details={task.details}
+                        _id={task._id}
                         status={task.status}
                         key={i}
+                        tasklist={task.tasklist}
+                        imageUrl={task.imageUrl}
                       />
                     )
                   })
                 }
               </DroppableDiv>
+              <div onClick={() => setShowTaskModal(true)}>+ ADD TASK</div>
             </Div> 
           )
         })
         }
       </>
-
-      {/* <Div>
-        <h2>BACKLOG</h2>
-        {canDrop ? 'release to drop' : 'Drag box here'}
-        <ColumnTarget
-          markStatus={markStatus}
-          status={'backlog'}
-        />
-        <DroppableDiv>
-          {tasks
-            .filter(task => task.status === 'backlog')
-            .map((task, i) => {
-              return (
-                <TaskCard
-                  flare={task.flare}
-                  title={task.title}
-                  description={task.description}
-                  _id={task.taskid}
-                  status={task.status}
-                  key={i}
-                />
-              )
-            })
-          }
-        </DroppableDiv>
-      </Div>
-      <Div>
-        <h2>TODO</h2>
-        {canDrop ? 'release to drop' : 'Drag box here'}
-        <ColumnTarget
-          markStatus={markStatus}
-          status={'todo'}
-        />
-        <DroppableDiv>
-          {tasks
-            .filter(task => task.status === 'todo')
-            .map((task, i) => {
-              return (
-                <TaskCard
-                  flare={task.flare}
-                  title={task.title}
-                  description={task.description}
-                  _id={task.taskid}
-                  status={task.status}
-                  key={i}
-                />
-              )
-            })
-          }
-        </DroppableDiv>
-      </Div>
-
-      <Div>
-        <h2>IN PROGRESS</h2>
-        {canDrop ? 'release to drop' : 'Drag box here'}
-        <ColumnTarget
-          markStatus={markStatus}
-          status={'in progress'}
-        />
-        <DroppableDiv>
-          {tasks
-            .filter(task => task.status === 'in progress')
-            .map((task, i) => {
-              return (
-                <TaskCard
-                  flare={task.flare}
-                  title={task.title}
-                  description={task.description}
-                  _id={task.taskid}
-                  status={task.status}
-                  key={i}
-                />
-              )
-            })
-          }
-        </DroppableDiv>
-      </Div>
-
-      <Div>
-        <h2>DONE</h2>
-        {canDrop ? 'release to drop' : 'Drag box here'}
-        <ColumnTarget
-          markStatus={markStatus}
-          status={'done'}
-        />
-        <DroppableDiv>
-          {tasks
-            .filter(task => task.status === 'done')
-            .map((task, i) => {
-              return (
-                <TaskCard
-                  flare={task.flare}
-                  title={task.title}
-                  description={task.description}
-                  _id={task.taskid}
-                  status={task.status}
-                  key={i}
-                />
-              )
-            })
-          }
-        </DroppableDiv>
-      </Div> */}
     </Main>
   );
 };
@@ -182,10 +167,11 @@ const Main = styled.main`
 
 const Div = styled.div`
   position: relative;
-  width: 300px;
+  width: 280px;
   min-height: 700px;
-  border: 1px solid red;
+  // border: 1px solid purple;
   margin-right: 30px;
+  // background-color: #FCFEFF;
 `;
 
 const DroppableDiv = styled.div`

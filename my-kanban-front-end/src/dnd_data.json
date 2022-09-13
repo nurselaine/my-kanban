@@ -12,7 +12,8 @@
       "title": "task1",
       "description": "task1",
       "taskid": 1,
-      "status": "todo"
+      "status": "todo",
+      "boardName": "first"
     },
     {   
       "columnid": 1,

@@ -7,17 +7,19 @@ export default function ColumnTarget(props){
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: ItemTypes.CARD,
-    drop: (item, monitor) => props.markStatus(item.id, item.status, props.status),
+    drop: (item, monitor) => props.markStatus(item.id, props.status),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
     }) 
   })
 
+
+// console.log(props.status);
   return (
     <Div
         ref={drop}
-        style={{ backgroundColor: isOver ? 'red' : 'white' }}
+        style={{ backgroundColor: isOver ? 'grey' : 'transparent' }}
         status={props.status}
     >
     </Div> 
@@ -26,7 +28,8 @@ export default function ColumnTarget(props){
 
 const Div = styled.div`
   position: absolute;
-  width: 300px;
+  width: 280px;
   height: 700px;
-  border: 1px solid red;
+  background-color: #FCFEFF;
+  // border: 1px solid blue;
 `;
