@@ -27,15 +27,21 @@ export default function TaskCard(props) {
     };
 
     const deleteTasks = (id) => {
-      fetch(`http://localhost:3001/task/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      })
-        .then(res => res.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error', error))
+// update the tasks state and filter out the task matching the id passed through
+
+      props.handleTaskChange(id);
+      console.log('task list updated with deletion');
+
+
+      // fetch(`http://localhost:3001/task/${id}`, {
+      //   method: 'DELETE',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   }
+      // })
+      //   .then(res => res.json())
+      //   .then(data => console.log(data))
+      //   .catch(error => console.error('Error', error))
     }
 
      // move this to the TaskModal component
@@ -73,7 +79,7 @@ export default function TaskCard(props) {
           <Div>
             <Icon>
               <MdModeEdit className="task-icon"/>
-              <MdDelete className="task-icon"/>
+              <MdDelete onClick={() => deleteTasks(props._id)} className="task-icon"/>
             </Icon>
           </Div>
         </Card.Body>

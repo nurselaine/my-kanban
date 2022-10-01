@@ -1,4 +1,5 @@
 import { useState, React, useEffect } from "react";
+import axios from 'axios';
 import Data from '../dnd_data.json';
 import TaskCard from "./TaskCard";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
@@ -6,7 +7,6 @@ import { ItemTypes } from "../utils/items";
 import styled from 'styled-components';
 import ColumnTarget from "./ColumnTarget";
 import ColumnHeader from './ColumnHeader';
-import { Button } from "bootstrap";
 
 export default function Column() {
 
@@ -14,14 +14,15 @@ export default function Column() {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [columns, setColumns] = useState([]);
   const [columnName, setColumnName] = useState('');
-  const [columnIndex, setColumnIndex] = useState(-1);
+  const [boardId, setBoardId] = useState(-1);
 
   useEffect(() => {
     getColumns();
     getTasks();
   }, []);
 
-  const getColumns = () => {
+  const getColumns = async () => {
+
     fetch(`http://localhost:3001/column`, {
       method: 'GET',
       headers: {
@@ -40,30 +41,31 @@ export default function Column() {
     fetch('http://localhost:3001/task')
         .then(res => res.json())
         .then(data => {
-          // console.log(data);
-          setTasks(data);
+          console.log(data[0]);
+          setBoardId(data[0]._id);
+          setTasks(data[0].tasks);
         })
         .catch(error => {
           console.error("Error", error)
         })
   }
 
-  const addColumn = () => {
-    fetch(`http://localhost:3001/column/add`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: ({
-        name: columnName,
-        index: columnIndex,
-        boardId: -1
-      })
-    })
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(error => console.error('Error', error));
-  }
+  // const addColumn = () => {
+  //   fetch(`http://localhost:3001/column/add`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: ({
+  //       name: columnName,
+  //       index: columnIndex,
+  //       boardId: -1
+  //     })
+  //   })
+  //     .then(res => res.json())
+  //     .then(data => console.log(data))
+  //     .catch(error => console.error('Error', error));
+  // }
 
   const addTask = () => {
     fetch(`http://localhost:3001/task/add`,{
@@ -89,9 +91,30 @@ export default function Column() {
       })
   }
 
+  const handleTaskChange = (tasks, id) => {
+    const updatedTasks = tasks.filter(task => task.id !== id);
+    setTasks(updatedTasks);
+  }
+
+  const saveData = () => {
+    const body = {
+      tasks: tasks
+    }
+    console.log(body);
+    fetch(`http://localhost:3001/task/save/${boardId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+      .then(res => res.json())
+      .then(rez => console.log(rez))
+      .catch(error => console.error("error", error));
+  }
+
   const markStatus = (id, status) => {
     const task = tasks.filter(task => task._id === id);
-    // task[0].status = updateStatus;
     task[0].status = status;
     setTasks(tasks.filter((task) => task._id !== id).concat(task[0]));
     // console.log(tasks);
@@ -114,6 +137,8 @@ export default function Column() {
   console.log(tasks);
   // console.log(columns);
   return (
+    // <>
+    // <button onClick={saveData}>Save</button>
     <Main className="columns-container" style={{ padding: "1rem 0" }}>
       {/* Refactor code */}
       <>
@@ -146,6 +171,7 @@ export default function Column() {
                         key={i}
                         tasklist={task.tasklist}
                         imageUrl={task.imageUrl}
+                        handleTaskChange={handleTaskChange}
                       />
                     )
                   })
@@ -157,7 +183,9 @@ export default function Column() {
         })
         }
       </>
+      <button onClick={saveData}>save Button</button>
     </Main>
+    // </>
   );
 };
 
