@@ -4,11 +4,25 @@ import { MdModeEdit, MdDelete } from 'react-icons/md';
 import { ItemTypes } from "../utils/items";
 import { useDrag } from "react-dnd";
 import styled from "styled-components";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 import './Task.css';
+
 export default function TaskCard(props) {
   // console.log(props._id)
 
-  const [{ isDragging }, drag ] = useDrag({
+  const [show, setShow] = useState(false);
+  const [title, setTitle] = useState(props.title);
+  const [details, setDetails] = useState(props.details);
+
+  const handleClose = () => {
+    updateTask();
+    setShow(false);
+  };
+  const handleShow = () => setShow(true);
+
+  const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.CARD,
     item: {
       id: props._id,
@@ -17,48 +31,33 @@ export default function TaskCard(props) {
     },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging()
-    }), 
+    }),
   })
 
   const cardStyles =
-    {
-      opacity: isDragging ? 0.5 : 1,
-      width: '18rem'
+  {
+    opacity: isDragging ? 0.5 : 1,
+    width: '18rem'
+  };
+
+  const deleteTasks = () => {
+    // update the tasks state and filter out the task matching the id passed through
+
+    props.handleTaskChange(props._id);
+    console.log('task list updated with deletion');
+
+  }
+
+  // move this to the TaskModal component
+  const updateTask = (id, updatedDetails) => {
+    const body = {
+      details,
+      title,
     };
+    props.handleTaskChange(props._id, body);
+  }
 
-    const deleteTasks = (id) => {
-// update the tasks state and filter out the task matching the id passed through
-
-      props.handleTaskChange(id);
-      console.log('task list updated with deletion');
-
-
-      // fetch(`http://localhost:3001/task/${id}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   }
-      // })
-      //   .then(res => res.json())
-      //   .then(data => console.log(data))
-      //   .catch(error => console.error('Error', error))
-    }
-
-     // move this to the TaskModal component
-  // const updateTask = (id, updatedDetails) => {
-  //   fetch(`http://localhost:3001/task/${id}`, {
-  //     method: 'PATCH',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({updatedDetails})
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => console.log(data))
-  //     .catch(error => console.error('Error', error));
-  // }
-
- return (
+  return (
     <>
       <Card
         ref={drag}
@@ -78,12 +77,47 @@ export default function TaskCard(props) {
           </Card.Text>
           <Div>
             <Icon>
-              <MdModeEdit className="task-icon"/>
-              <MdDelete onClick={() => deleteTasks(props._id)} className="task-icon"/>
+              <button onClick={handleShow} ><MdModeEdit className="task-icon" /></button>
+              <button onClick={deleteTasks} ><MdDelete className="task-icon" /></button>
             </Icon>
           </Div>
         </Card.Body>
       </Card>
+
+      <>
+        {/* <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button> */}
+
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+            <Form>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Input type="title" onChange={(e) => setTitle(e.target.value)} placeholder={props.title} />
+              </Form.Group>
+            </Form>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Control type="email" onChange={(e) => setDetails(e.target.value)} placeholder={props.details} />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+
+
     </>
   );
 };
@@ -97,4 +131,8 @@ const Div = styled.div`
 const Icon = styled.div`
   margin-left: auto;
   // border: 1px solid red;
+`;
+
+const Input = styled.input`
+  border: 1px red solid;
 `;

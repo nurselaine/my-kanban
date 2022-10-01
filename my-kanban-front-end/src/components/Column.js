@@ -30,8 +30,8 @@ export default function Column() {
       }
     })
       .then(res => res.json())
-      .then(data =>{
-        const sortedData = data.sort((a,b) => a.index - b.index)
+      .then(data => {
+        const sortedData = data.sort((a, b) => a.index - b.index)
         setColumns(sortedData)
       })
       .catch(error => console.error('Error', error));
@@ -39,15 +39,15 @@ export default function Column() {
 
   const getTasks = () => {
     fetch('http://localhost:3001/task')
-        .then(res => res.json())
-        .then(data => {
-          console.log(data[0]);
-          setBoardId(data[0]._id);
-          setTasks(data[0].tasks);
-        })
-        .catch(error => {
-          console.error("Error", error)
-        })
+      .then(res => res.json())
+      .then(data => {
+        // console.log(data[0]);
+        setBoardId(data[0]._id);
+        setTasks(data[0].tasks);
+      })
+      .catch(error => {
+        console.error("Error", error)
+      })
   }
 
   // const addColumn = () => {
@@ -68,7 +68,7 @@ export default function Column() {
   // }
 
   const addTask = () => {
-    fetch(`http://localhost:3001/task/add`,{
+    fetch(`http://localhost:3001/task/add`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export default function Column() {
         status: "backlog",
         imageUrl: "",
         tasklist: "test data 2"
-      }), 
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -91,9 +91,21 @@ export default function Column() {
       })
   }
 
-  const handleTaskChange = (tasks, id) => {
-    const updatedTasks = tasks.filter(task => task.id !== id);
-    setTasks(updatedTasks);
+  const handleTaskChange = (id, body) => {
+    if (body) {
+      // this will update the tasks and add it to tasks state 
+      const task = tasks.filter(task => task._id === id);
+      task[0].title = body.title;
+      task[0].details = body.details;
+      console.log(task);
+      console.log(`task updated! ${JSON.stringify(task)}`);
+      setTasks(tasks.filter((task) => task._id !== id).concat(task[0]));
+    } else {
+      // this will remove the deleted task
+      const updatedTasks = tasks.filter(task => task._id !== id);
+      setTasks(updatedTasks);
+      // console.log(`task deleted! ${JSON.stringify(updatedTasks.length)}`);
+    }
   }
 
   const saveData = () => {
@@ -130,7 +142,7 @@ export default function Column() {
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop(),
     })
- 
+
   })
 
 
@@ -143,44 +155,44 @@ export default function Column() {
       {/* Refactor code */}
       <>
         {
-        columns.map((column, i) => {
-          return (
-            <Div key={i}>
-              <ColumnHeader
-                column={column}
-                index={i}
-                _id={column._id}
-                length={Data.columns.length}
-              />
-              {/* {canDrop ? 'release to drop' : 'Drag box here'} */}
-              <ColumnTarget
-                markStatus={markStatus}
-                status={column.name.toLowerCase()}
-              />
-              <DroppableDiv>
-                {tasks
-                  .filter(task => task.status === column.name.toLowerCase())
-                  .map((task, i) => {
-                    // console.log('hello2', task);
-                    return (
-                      <TaskCard
-                        title={task.title}
-                        details={task.details}
-                        _id={task._id}
-                        status={task.status}
-                        key={i}
-                        tasklist={task.tasklist}
-                        imageUrl={task.imageUrl}
-                        handleTaskChange={handleTaskChange}
-                      />
-                    )
-                  })
-                }
-              </DroppableDiv>
-              <div onClick={() => setShowTaskModal(true)}>+ ADD TASK</div>
-            </Div> 
-          )
-        })
+          columns.map((column, i) => {
+            return (
+              <Div key={i}>
+                <ColumnHeader
+                  column={column}
+                  index={i}
+                  _id={column._id}
+                  length={Data.columns.length}
+                />
+                {/* {canDrop ? 'release to drop' : 'Drag box here'} */}
+                <ColumnTarget
+                  markStatus={markStatus}
+                  status={column.name.toLowerCase()}
+                />
+                <DroppableDiv>
+                  {tasks
+                    .filter(task => task.status === column.name.toLowerCase())
+                    .map((task, i) => {
+                      // console.log('hello2', task);
+                      return (
+                        <TaskCard
+                          title={task.title}
+                          details={task.details}
+                          _id={task._id}
+                          status={task.status}
+                          key={i}
+                          tasklist={task.tasklist}
+                          imageUrl={task.imageUrl}
+                          handleTaskChange={handleTaskChange}
+                        />
+                      )
+                    })
+                  }
+                </DroppableDiv>
+                <div onClick={() => setShowTaskModal(true)}>+ ADD TASK</div>
+              </Div>
+            )
+          })
         }
       </>
       <button onClick={saveData}>save Button</button>
