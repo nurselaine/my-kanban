@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import TaskModal from "./TaskModal";
 import './Task.css';
 
 export default function TaskCard(props) {
@@ -41,15 +42,13 @@ export default function TaskCard(props) {
   };
 
   const deleteTasks = () => {
-    // update the tasks state and filter out the task matching the id passed through
 
     props.handleTaskChange(props._id);
     console.log('task list updated with deletion');
 
   }
 
-  // move this to the TaskModal component
-  const updateTask = (id, updatedDetails) => {
+  const updateTask = () => {
     const body = {
       details,
       title,
@@ -85,10 +84,6 @@ export default function TaskCard(props) {
       </Card>
 
       <>
-        {/* <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button> */}
-
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
@@ -134,5 +129,6 @@ const Icon = styled.div`
 `;
 
 const Input = styled.input`
-  border: 1px red solid;
+  // border: 1px red solid;
+  border: none;
 `;

@@ -1,5 +1,13 @@
 .App {
   text-align: center;
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.container{
+  flex-grow: 1;
 }
 
 .App-logo {
@@ -36,3 +44,20 @@
     transform: rotate(360deg);
   }
 }
+
+a{
+  color: white !important;
+  text-decoration: none !important;
+}
+
+a:hover{
+  text-decoration-line: underline !important;
+  text-underline-offset: 10px !important;
+}
+
+svg.footer-svg{
+  color: white;
+  margin: auto;
+}
+
+

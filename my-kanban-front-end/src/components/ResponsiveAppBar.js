@@ -2,6 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { Link, 
   // Routes, 
   // Route, 
@@ -17,20 +18,20 @@ function ResponsiveAppBar() {
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="#home">HELLO</Navbar.Brand>
+        <Navbar.Brand href="#home">BRAIN</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
 
             <Nav.Link>
-              <Link to='/'>Home</Link>
+              <Link to='/'>HOME</Link>
             </Nav.Link>
 
             <Nav.Link>
-              <Link to='/invoices'>CREATE +</Link>
+              <Link to='/create'>CREATE <AiOutlinePlus/></Link>
             </Nav.Link>
 
-            <NavDropdown title="REACENTS" id="collasible-nav-dropdown">
+            <NavDropdown title="RECENTS" id="collasible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1"><Link to='Expenses/Boots'>Boots</Link></NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
               <Link to='Expenses/Footwear'>Footwear</Link>
@@ -43,9 +44,9 @@ function ResponsiveAppBar() {
             </NavDropdown>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">More deets</Nav.Link>
+            <Nav.Link href="#deets">Sign in</Nav.Link>
             <Nav.Link eventKey={2} href="#memes">
-              Dank memes
+              Sign up
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

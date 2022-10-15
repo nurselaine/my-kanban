@@ -6,12 +6,6 @@ export default function Task() {
 
     const [tasks, setTasks] = useState(Data.tasks);
 
-    // const markAsDone = id => {
-    //   const task = tasks.filter(task => task.taskid === id);
-    //   task[0].status = "done";
-    //   setTasks(tasks.filter(() => task.taskid !== id)).concat(task[0]);
-    // };
-
   return (
    <>
     {tasks

@@ -1,5 +1,4 @@
 import { useState, React, useEffect } from "react";
-import axios from 'axios';
 import Data from '../dnd_data.json';
 import TaskCard from "./TaskCard";
 import { useDrop } from "react-dnd/dist/hooks/useDrop";
@@ -7,14 +6,31 @@ import { ItemTypes } from "../utils/items";
 import styled from 'styled-components';
 import ColumnTarget from "./ColumnTarget";
 import ColumnHeader from './ColumnHeader';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import { v4 as uuidv4 } from 'uuid';
+import './Column.css';
+
 
 export default function Column() {
+
+  // const [show, setShow] = useState(false);
+  const [title, setTitle] = useState('');
+  const [details, setDetails] = useState('');
+  const [status, setStatus] = useState('');
 
   const [tasks, setTasks] = useState([]);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [columns, setColumns] = useState([]);
-  const [columnName, setColumnName] = useState('');
   const [boardId, setBoardId] = useState(-1);
+
+  const handleClose = () => {
+    setShowTaskModal(false);
+
+    addTask();
+  };
+  const handleShow = () => setShowTaskModal(true);
 
   useEffect(() => {
     getColumns();
@@ -42,6 +58,7 @@ export default function Column() {
       .then(res => res.json())
       .then(data => {
         // console.log(data[0]);
+        // console.log(data);
         setBoardId(data[0]._id);
         setTasks(data[0].tasks);
       })
@@ -50,61 +67,35 @@ export default function Column() {
       })
   }
 
-  // const addColumn = () => {
-  //   fetch(`http://localhost:3001/column/add`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: ({
-  //       name: columnName,
-  //       index: columnIndex,
-  //       boardId: -1
-  //     })
-  //   })
-  //     .then(res => res.json())
-  //     .then(data => console.log(data))
-  //     .catch(error => console.error('Error', error));
-  // }
-
   const addTask = () => {
-    fetch(`http://localhost:3001/task/add`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        boardId: 123,
-        title: "test data 2",
-        details: "test details 2",
-        status: "backlog",
-        imageUrl: "",
-        tasklist: "test data 2"
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      })
+
+    const body = {
+      title: title,
+      details: details,
+      status: status,
+      imageUrl: "",
+      tasklist: "test data 2",
+      _id: uuidv4(),
+      boardId: boardId,
+    };
+    console.log(body);
+    setTasks(tasks.concat(body));
+    console.log(tasks);
+
+    setTitle('');
+    setDetails('');
+    setStatus('');
   }
 
   const handleTaskChange = (id, body) => {
     if (body) {
-      // this will update the tasks and add it to tasks state 
       const task = tasks.filter(task => task._id === id);
       task[0].title = body.title;
       task[0].details = body.details;
-      console.log(task);
-      console.log(`task updated! ${JSON.stringify(task)}`);
       setTasks(tasks.filter((task) => task._id !== id).concat(task[0]));
     } else {
-      // this will remove the deleted task
       const updatedTasks = tasks.filter(task => task._id !== id);
       setTasks(updatedTasks);
-      // console.log(`task deleted! ${JSON.stringify(updatedTasks.length)}`);
     }
   }
 
@@ -145,73 +136,108 @@ export default function Column() {
 
   })
 
-
-  console.log(tasks);
-  // console.log(columns);
   return (
-    // <>
-    // <button onClick={saveData}>Save</button>
-    <Main className="columns-container" style={{ padding: "1rem 0" }}>
-      {/* Refactor code */}
-      <>
+    <div className="columns-container" style={{ padding: "1rem 0" }}>
+      <Main>
         {
           columns.map((column, i) => {
             return (
-              <Div key={i}>
-                <ColumnHeader
-                  column={column}
-                  index={i}
-                  _id={column._id}
-                  length={Data.columns.length}
-                />
-                {/* {canDrop ? 'release to drop' : 'Drag box here'} */}
-                <ColumnTarget
-                  markStatus={markStatus}
-                  status={column.name.toLowerCase()}
-                />
-                <DroppableDiv>
-                  {tasks
-                    .filter(task => task.status === column.name.toLowerCase())
-                    .map((task, i) => {
-                      // console.log('hello2', task);
-                      return (
-                        <TaskCard
-                          title={task.title}
-                          details={task.details}
-                          _id={task._id}
-                          status={task.status}
-                          key={i}
-                          tasklist={task.tasklist}
-                          imageUrl={task.imageUrl}
-                          handleTaskChange={handleTaskChange}
-                        />
-                      )
-                    })
-                  }
-                </DroppableDiv>
-                <div onClick={() => setShowTaskModal(true)}>+ ADD TASK</div>
-              </Div>
+              <article>
+                <Div className="column-div" key={i}>
+                  <ColumnHeader
+                    column={column}
+                    index={i}
+                    _id={column._id}
+                    length={Data.columns.length}
+                  />
+                  <ColumnTarget
+                    markStatus={markStatus}
+                    status={column.name.toLowerCase()}
+                  />
+                  <DroppableDiv>
+                    {tasks
+                      .filter(task => task.status === column.name.toLowerCase())
+                      .map((task, i) => {
+                        return (
+                          <TaskCard
+                            title={task.title}
+                            details={task.details}
+                            _id={task._id}
+                            status={task.status}
+                            key={i}
+                            tasklist={task.tasklist}
+                            imageUrl={task.imageUrl}
+                            handleTaskChange={handleTaskChange}
+                          />
+                        )
+                      })
+                    }
+                  </DroppableDiv>
+                </Div>
+              </article>
             )
           })
         }
-      </>
-      <button onClick={saveData}>save Button</button>
-    </Main>
+
+        <Modal show={showTaskModal} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>
+              <Form>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <input type="title" onChange={(e) => setTitle(e.target.value)} placeholder='Task Title' />
+                </Form.Group>
+              </Form>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Control type="email" onChange={(e) => setDetails(e.target.value)} placeholder='Task Details' />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Select onChange={(e) => setStatus(e.target.value)}>
+                  <option>Open this select menu</option>
+                  {columns.map((col, i) => {
+                    return (
+                      <option value={col.name} >{col.name}</option>
+                    )
+                  })}
+                </Form.Select>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </Main>
+      <article className="main-span">
+        <Button id="updateTask-btn-1" variant="secondary" onClick={handleShow}>ADD TASK</Button>
+        <Button id="updateTask-btn-2" variant="outline-primary" onClick={saveData}>SAVE</Button>
+      </article>
+    </div>
     // </>
   );
 };
 
 const Main = styled.main`
   display: flex;
+
 `;
 
 const Div = styled.div`
   position: relative;
+  height: 700px;
+  overflow: scroll;
+  overflow-x: hidden;
   width: 280px;
-  min-height: 700px;
-  // border: 1px solid purple;
   margin-right: 30px;
-  // background-color: #FCFEFF;
+  // padding: 15px;
 `;
 
 const DroppableDiv = styled.div`

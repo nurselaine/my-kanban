@@ -28,8 +28,8 @@ export default function ColumnTarget(props){
 
 const Div = styled.div`
   position: absolute;
-  width: 280px;
-  height: 700px;
+  width: 100%;
+  height: 600px;
   background-color: #FCFEFF;
   // border: 1px solid blue;
 `;

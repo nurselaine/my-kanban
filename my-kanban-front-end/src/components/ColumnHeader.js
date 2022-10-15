@@ -1,10 +1,10 @@
 import { useState, React } from 'react';
-import Form from 'react-bootstrap';
+// import Form from 'react-bootstrap';
 import styled from 'styled-components';
-import Column from './Column';
+// import Column from './Column';
 import {MdEdit} from 'react-icons/md';
 import {IoMdTrash} from 'react-icons/io';
-import {FcCheckmark} from 'react-icons/fc';
+// import {FcCheckmark} from 'react-icons/fc';
 
 const ColumnHeader = (props) => {
 
@@ -60,19 +60,19 @@ const ColumnHeader = (props) => {
           :
           <>
             <H2>{props.column.name.toUpperCase()}</H2>
-            <P>{props.length} items</P>
-            <Button onClick={() => setShowForm(true)}><MdEdit/></Button>
-            <Button onClick={deleteColumn(props.index)} ><IoMdTrash/></Button>
+            {/* <P>{props.length} items</P> */}
+            {/* <Button onClick={() => setShowForm(true)}><MdEdit/></Button>
+            <Button onClick={deleteColumn} ><IoMdTrash/></Button> */}
           </>
       }
     </Header>
   )
 }
 
-const Button = styled.button`
-  border: none;
-  background-color: transparent;
-`;
+// const Button = styled.button`
+//   border: none;
+//   background-color: transparent;
+// `;
 
 const Input = styled.input`
   border-style: none;
@@ -89,12 +89,12 @@ const Header = styled.div`
 const H2 = styled.h2`
   font-weight: 400;
 `;
-const P = styled.p`
-  border: 1px solid red;
-  margin: auto;
-  margin-left: 1.5em;
-  font-size: 0.75em;
-  font-weight: lighter;
-`;
+// const P = styled.p`
+//   border: 1px solid red;
+//   margin: auto;
+//   margin-left: 1.5em;
+//   font-size: 0.75em;
+//   font-weight: lighter;
+// `;
 
 export default ColumnHeader;
