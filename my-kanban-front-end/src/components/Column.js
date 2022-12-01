@@ -9,13 +9,14 @@ import ColumnHeader from './ColumnHeader';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { v4 as uuidv4 } from 'uuid';
+
+import { ScrollArea } from '@mantine/core';
 import './Column.css';
 
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Column() {
 
-  // const [show, setShow] = useState(false);
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState('');
   const [status, setStatus] = useState('');
@@ -142,7 +143,7 @@ export default function Column() {
         {
           columns.map((column, i) => {
             return (
-              <article>
+              <article id="container" style={{ position: 'relative', width: '300px', height: '700px' }}>
                 <Div className="column-div" key={i}>
                   <ColumnHeader
                     column={column}
@@ -150,29 +151,31 @@ export default function Column() {
                     _id={column._id}
                     length={Data.columns.length}
                   />
+                  <ScrollArea style={{ height: 600 }} type="always" offsetScrollbars>
                   <ColumnTarget
-                    markStatus={markStatus}
-                    status={column.name.toLowerCase()}
-                  />
-                  <DroppableDiv>
-                    {tasks
-                      .filter(task => task.status === column.name.toLowerCase())
-                      .map((task, i) => {
-                        return (
-                          <TaskCard
-                            title={task.title}
-                            details={task.details}
-                            _id={task._id}
-                            status={task.status}
-                            key={i}
-                            tasklist={task.tasklist}
-                            imageUrl={task.imageUrl}
-                            handleTaskChange={handleTaskChange}
-                          />
-                        )
-                      })
-                    }
-                  </DroppableDiv>
+                      markStatus={markStatus}
+                      status={column.name.toLowerCase()}
+                    />
+                    <DroppableDiv>
+                      {tasks
+                        .filter(task => task.status === column.name.toLowerCase())
+                        .map((task, i) => {
+                          return (
+                            <TaskCard
+                              title={task.title}
+                              details={task.details}
+                              _id={task._id}
+                              status={task.status}
+                              key={i}
+                              tasklist={task.tasklist}
+                              imageUrl={task.imageUrl}
+                              handleTaskChange={handleTaskChange}
+                            />
+                          )
+                        })
+                      }
+                    </DroppableDiv>
+                  </ScrollArea>
                 </Div>
               </article>
             )
@@ -221,7 +224,6 @@ export default function Column() {
         <Button id="updateTask-btn-2" variant="outline-primary" onClick={saveData}>SAVE</Button>
       </article>
     </div>
-    // </>
   );
 };
 
@@ -233,8 +235,7 @@ const Main = styled.main`
 const Div = styled.div`
   position: relative;
   height: 700px;
-  overflow: scroll;
-  overflow-x: hidden;
+  // overflow-y: hidden;
   width: 280px;
   margin-right: 30px;
   // padding: 15px;

@@ -1,24 +1,25 @@
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import { AiOutlinePlus } from 'react-icons/ai';
-import { Link, 
-  // Routes, 
-  // Route, 
-  // Switch 
-} from 'react-router-dom';
-// import Expenses from './TaskCard';
-// import Invoices from './Column';
-// import LandingPage from './LandingPage';
-
+import { OverlayTrigger, 
+        Popover, 
+        Nav, 
+        Navbar, 
+        NavDropdown 
+      } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 function ResponsiveAppBar() {
+
+  const popover = (
+    <Popover id="popover-create">
+      <Popover.Body>Create a new board coming soon</Popover.Body>
+    </Popover>
+  )
+
   return ( 
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="#home">BRAIN</Navbar.Brand>
+        <Navbar.Brand href="#home"><img src='./trello.png' style={{ height: '30px', width: '30px'}} alt='trello-logo' /></Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
@@ -28,36 +29,24 @@ function ResponsiveAppBar() {
             </Nav.Link>
 
             <Nav.Link>
-              <Link to='/create'>CREATE <AiOutlinePlus/></Link>
+              <OverlayTrigger trigger="click" placement='bottom' overlay={popover}>
+                <Link to='/create'>CREATE</Link>
+              </OverlayTrigger>
             </Nav.Link>
 
             <NavDropdown title="RECENTS" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1"><Link to='Expenses/Boots'>Boots</Link></NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-              <Link to='Expenses/Footwear'>Footwear</Link>
-              </NavDropdown.Item>
-              <NavDropdown.Item ><Link to='Expenses/Sandals'>Sandals</Link></NavDropdown.Item>
+              <NavDropdown.Item style={{backgroundColor:"grey"}}>Coming Soon!</NavDropdown.Item>
+              <NavDropdown.Item style={{backgroundColor:"grey"}} href="#action/3.1">Coming Soon!</NavDropdown.Item>
+              <NavDropdown.Item style={{backgroundColor:"grey"}} href="#action/3.1">Coming Soon!</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
+              <NavDropdown.Item style={{backgroundColor:"grey"}}>
                 Separated link
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
-          <Nav>
-            <Nav.Link href="#deets">Sign in</Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              Sign up
-            </Nav.Link>
-          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
-
-    {/* <Routes>
-      <Route exact path='/'><LandingPage/></Route>
-      <Route path='/expenses'><Expenses /></Route>
-      <Route path='/invoices'><Invoices /></Route> 
-    </Routes> */}
     </>
   );
 }

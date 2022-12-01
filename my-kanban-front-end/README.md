@@ -1,6 +1,14 @@
 # My Kanban App
 #### Authors: Elaine Huynh
 
+### Deployed Site
+- Coming Soon
+
+## Start Instructions
+- Clone repo
+- npm i axios bootstrap perfect-scrollbar react-dnd react-dnd-html5-backend react-icons react-router-dom styled-components uuid
+- run npm start
+
 ## Problem Domain
 Planning a project is an essential step to staying organized and increasing productivity through the working process. After running out of my own trello boards, I decided I wanted to create my own version of a kanban board that I can continue to personalize and use as I create my own personal projects. Creating this planning tool is to help others get to know their project, keep track of their progress, and use it with groups to make planning more inclusive. 
 

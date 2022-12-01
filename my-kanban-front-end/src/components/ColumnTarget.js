@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 export default function ColumnTarget(props){
 
-  const [{ canDrop, isOver }, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: ItemTypes.CARD,
     drop: (item, monitor) => props.markStatus(item.id, props.status),
     collect: (monitor) => ({
@@ -14,8 +14,6 @@ export default function ColumnTarget(props){
     }) 
   })
 
-
-// console.log(props.status);
   return (
     <Div
         ref={drop}
@@ -31,5 +29,4 @@ const Div = styled.div`
   width: 100%;
   height: 600px;
   background-color: #FCFEFF;
-  // border: 1px solid blue;
 `;

@@ -1,14 +1,26 @@
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
+import {
+  Navbar, 
+  Nav,
+  OverlayTrigger, 
+  Popover 
+} from 'react-bootstrap';
 import { AiFillFolder, AiOutlineGithub, AiOutlineLinkedin } from 'react-icons/ai';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import {
   Link,
 } from 'react-router-dom';
 
 
 function ResponsiveAppBar() {
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Body>
+        Coming Soon!
+      </Popover.Body>
+    </Popover>
+  )
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -18,20 +30,18 @@ function ResponsiveAppBar() {
             <Nav className="me-auto">
 
               <Nav.Link>
-                <Link to='/'>ABOUT</Link>
-              </Nav.Link>
-
-              <Nav.Link>
+                <OverlayTrigger trigger='click' placement='top' overlay={popover}>
                 <Link to='/create'>TUTORIAL</Link>
+                </OverlayTrigger>
               </Nav.Link>
             </Nav>
             <Nav>
-              <div>
-                <button><AiFillFolder className='footer-svg'/> </button>
-                <button><AiOutlineGithub className='footer-svg'/> </button>
-                <button><AiOutlineLinkedin className='footer-svg'/> </button>
-              </div>
-              <Navbar.Brand href="#home">BRAIN</Navbar.Brand>
+            <Navbar.Brand>Contact Me!</Navbar.Brand>
+              <ul style={{ display: 'flex', flexDirection: 'row', margin: 'auto', paddingLeft: 'none'}}>
+                <li style={{ padding: '10px'}}><a><AiFillFolder className='footer-svg'/></a></li>
+                <li style={{ padding: '10px'}}><a href='www.Github.com/nurselaine' target='_blank'><AiOutlineGithub className='footer-svg'/></a></li>
+                <li style={{ padding: '10px'}}><a href="www.Linkedin.com/in/nurselaine" target="_blank"><AiOutlineLinkedin className='footer-svg'/></a></li>
+              </ul>
             </Nav>
           </Navbar.Collapse>
         </Container>

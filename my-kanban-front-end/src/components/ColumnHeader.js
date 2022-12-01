@@ -60,19 +60,11 @@ const ColumnHeader = (props) => {
           :
           <>
             <H2>{props.column.name.toUpperCase()}</H2>
-            {/* <P>{props.length} items</P> */}
-            {/* <Button onClick={() => setShowForm(true)}><MdEdit/></Button>
-            <Button onClick={deleteColumn} ><IoMdTrash/></Button> */}
           </>
       }
     </Header>
   )
 }
-
-// const Button = styled.button`
-//   border: none;
-//   background-color: transparent;
-// `;
 
 const Input = styled.input`
   border-style: none;
@@ -81,20 +73,14 @@ const Input = styled.input`
 `;
 
 const Header = styled.div`
-  border: 1px solid red;
   display: flex;
   justify-content: flex-start;
   padding: 10px 0px;
 `;
 const H2 = styled.h2`
-  font-weight: 400;
+  font-weight: 600;
+  padding: 10px;
+  margin-bottom: 0;
 `;
-// const P = styled.p`
-//   border: 1px solid red;
-//   margin: auto;
-//   margin-left: 1.5em;
-//   font-size: 0.75em;
-//   font-weight: lighter;
-// `;
 
 export default ColumnHeader;
